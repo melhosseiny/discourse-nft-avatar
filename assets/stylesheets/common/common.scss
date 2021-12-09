@@ -1,0 +1,19 @@
+/* nft-gallery */
+.nft-gallery {
+  display: grid;
+  gap: 8px;
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.nft-gallery > * {
+  box-sizing: border-box;
+  min-width: 0;
+  grid-column: auto / span 1;
+}
+
+img.cover {
+  object-fit: cover;
+  width: 100%;
+  display: block;
+}

@@ -1,0 +1,6 @@
+<p>NFT gallery {{address}}</p>
+<div class="nft-gallery">
+{{#each assets as |asset|}}
+  <img class="cover" src="{{asset.image_url}}" onclick={{action "selectAsset"}} width="180" height="180" alt="#">
+{{/each}}
+</div>
