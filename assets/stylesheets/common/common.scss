@@ -17,3 +17,13 @@ img.cover {
   width: 100%;
   display: block;
 }
+
+.avatar-selector .avatar-choice {
+  margin-bottom: 0.75em;
+  grid-template-columns: 2em 1fr auto auto;
+}
+
+img.avatar {
+  border-radius: 0;
+  clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+}

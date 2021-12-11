@@ -1,9 +1,14 @@
-export default{
+export default {
   setupComponent(args, component) {
     component.set("address", "");
   },
   actions: {
-    async connectToWallet (a, b) {
+    uploadComplete() {
+      console.log("selected");
+      this.element.querySelector("input").checked = true;
+      // this.done();
+    },
+    async connectToWallet() {
       try {
         if (!window.ethereum) {
           throw new Error("Can't find MetaMask");
@@ -15,6 +20,9 @@ export default{
         console.error(e);
         console.error(`${e.message}`);
       }
+    },
+    selectNFT(url) {
+      this.set("nft", url);
     }
   }
 }

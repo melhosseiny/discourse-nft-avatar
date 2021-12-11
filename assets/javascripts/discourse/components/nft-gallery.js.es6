@@ -12,9 +12,7 @@ export default Ember.Component.extend({
   actions: {
     async selectAsset(event) {
       console.log(event.target.src);
-      const response = await fetch(event.target.src)
-      const blob = await response.blob();
-      console.log(blob);
+      this.get("select")(event.target.src);
     }
   }
 })
