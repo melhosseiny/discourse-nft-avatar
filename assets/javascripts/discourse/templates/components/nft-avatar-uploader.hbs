@@ -1,6 +1,10 @@
 <label class="btn btn-default btn-icon-text" disabled={{uploading}} title={{i18n "user.change_avatar.upload_title"}}>
   {{#if connecting}}
     {{d-icon "fab-ethereum" class="fa-spin"}}
+  {{else if connectError}}
+    {{d-icon "fab-ethereum" class="warning"}}
+  {{else if address}}
+    {{d-icon "fab-ethereum" class="success"}}
   {{else}}
     {{d-icon "fab-ethereum"}}
   {{/if}}

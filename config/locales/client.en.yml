@@ -1,9 +1,4 @@
 en:
   js:
     nft_avatar:
-      title: "Purple Tentacle"
-      show: "Show Purple Tentacle"
       connect: "NFT"
-    user:
-      change_avatar:
-        nft_avatar_empty: "Add an NFT avatar"

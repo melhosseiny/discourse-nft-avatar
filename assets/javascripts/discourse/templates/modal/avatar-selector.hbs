@@ -59,11 +59,16 @@
                               uploader=uploader
                               uploading=uploading
                               connecting=connecting
+                              connectError=connectError
+                              address=address
                               class="avatar-uploader"
                               id="nft-avatar-uploader"
                               click=(action "connectToWallet")
                               done=(action "uploadComplete")}}
       </div>
+      {{#if connectError}}
+        <div class="alert alert-error">{{connectError}} {{replace-emoji ":frowning_face:" (hash lazy=true)}}</div>
+      {{/if}}
       {{#if address}}
         <NftGallery @address={{address}} @select={{action "selectNFT"}} />
       {{/if}}

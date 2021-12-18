@@ -14,6 +14,14 @@ const AUTH_EXTS = {
   ".webp": "image/webp"
 }
 
+const addExtIfMissing = (name, blobType) => {
+  if (!Object.keys(AUTH_EXTS).some(ext => name.endsWith(ext))) {
+    const typeExtMap = new Map(Object.entries(AUTH_EXTS).map(entry => entry.reverse()));
+    name += typeExtMap.get(blobType);
+  };
+  return name;
+}
+
 export default Component.extend(UppyUploadMixin, {
   type: "avatar",
   tagName: "span",
@@ -33,27 +41,21 @@ export default Component.extend(UppyUploadMixin, {
     this.done();
   },
 
+  // only upload if selected NFT changes
   didReceiveAttrs() {
-    console.log("got nft");
-    console.log(this.get("prev_nft"));
-    console.log(this.get("nft"));
     if (this.get("nft") !== this.get("prev_nft")) {
       this.uploadNFT(this.get("nft"));
     }
     this.set("prev_nft", this.get("nft"));
   },
 
-  // jpg, jpeg, png, gif, heic, heif, webp
   async uploadNFT(src) {
     const url = new URL(src);
     let name = url.pathname.split('/').pop();
     const response = await fetch(url.href)
     const blob = await response.blob();
     console.log(blob);
-    if (!Object.keys(AUTH_EXTS).some(ext => name.endsWith(ext))) {
-      const typeExtMap = new Map(Object.entries(AUTH_EXTS).map(entry => entry.reverse()));
-      name += typeExtMap.get(blob.type);
-    };
+    name = addExtIfMissing(name, blob.type);
     console.log("mappedName", name);
     try {
       this._uppyInstance.addFile({

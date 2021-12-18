@@ -1,7 +1,4 @@
 plugins:
-  awesomeness_enabled:
+  nft_avatar_enabled:
     default: true
-    client: true
-  awesomeness_max_volume:
-    default: 10
     client: true

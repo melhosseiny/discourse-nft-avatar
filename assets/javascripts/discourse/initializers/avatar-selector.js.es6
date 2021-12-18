@@ -12,20 +12,19 @@ export default {
           async connectToWallet() {
             this.set("uploader", "nft");
             try {
-              console.log("connecting to wallet");
               this.set("connecting", true);
               if (!window.ethereum) {
-                throw new Error("Can't find MetaMask");
+                throw {
+                  name: "metamask_error",
+                  message: "Can't find MetaMask. Install MetaMask or use Brave Browser."
+                }
               }
               const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-              console.log("accounts", accounts);
               this.set("address", accounts[0].toLowerCase());
             } catch (e) {
-              console.error(e);
-              console.error(`${e.message}`);
+              this.set("connectError", e.message);
             } finally {
               this.set("connecting", false);
-              console.log("connected to wallet");
             }
           },
           selectNFT(url) {
