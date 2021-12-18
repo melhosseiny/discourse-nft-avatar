@@ -3,13 +3,34 @@
   display: grid;
   gap: 8px;
   grid-auto-flow: dense;
-  grid-template-columns: repeat(3, 1fr);
-}
+  grid-template-columns: repeat(4, 90px);
 
-.nft-gallery > * {
-  box-sizing: border-box;
-  min-width: 0;
-  grid-column: auto / span 1;
+  &> * {
+    box-sizing: border-box;
+    min-width: 0;
+    grid-column: auto / span 1;
+  }
+
+  & .alert {
+    grid-column: auto / span 4;
+  }
+
+  & img {
+    &:hover {
+      background-color: $tertiary-low;
+      clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+    }
+  }
+
+  & .placeholder-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 0;
+    clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+    &:before {
+      height: 90px;
+    }
+  }
 }
 
 img.cover {
@@ -23,7 +44,28 @@ img.cover {
   grid-template-columns: 2em 1fr auto auto;
 }
 
+.avatar-uploader + .avatar-uploader {
+  margin-left: 8px;
+}
+
 img.avatar {
   border-radius: 0;
+  background-color: $tertiary-low;;
   clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+}
+
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg)
+  }
+
+  to {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn)
+  }
+}
+
+.fa-spin {
+  animation: fa-spin 2s linear infinite;
 }

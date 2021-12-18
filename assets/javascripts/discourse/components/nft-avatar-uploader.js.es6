@@ -4,6 +4,16 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { observer } from "@ember/object";
 import { warn } from "@ember/debug";
 
+const AUTH_EXTS = {
+  ".jpeg": "image/jpeg",
+  ".jpg": "image/jpeg",
+  ".png": "image/png",
+  ".gif": "image/gif",
+  ".heic": "image/heic",
+  ".heif": "image/heif",
+  ".webp": "image/webp"
+}
+
 export default Component.extend(UppyUploadMixin, {
   type: "avatar",
   tagName: "span",
@@ -17,7 +27,7 @@ export default Component.extend(UppyUploadMixin, {
     this.setProperties({
       imageIsNotASquare: upload.width !== upload.height,
       uploadedAvatarTemplate: upload.url,
-      uploadedAvatarId: upload.id,
+      uploadedAvatarId: upload.id
     });
 
     this.done();
@@ -33,12 +43,18 @@ export default Component.extend(UppyUploadMixin, {
     this.set("prev_nft", this.get("nft"));
   },
 
+  // jpg, jpeg, png, gif, heic, heif, webp
   async uploadNFT(src) {
     const url = new URL(src);
-    const name = url.pathname.split('/').pop();
+    let name = url.pathname.split('/').pop();
     const response = await fetch(url.href)
     const blob = await response.blob();
     console.log(blob);
+    if (!Object.keys(AUTH_EXTS).some(ext => name.endsWith(ext))) {
+      const typeExtMap = new Map(Object.entries(AUTH_EXTS).map(entry => entry.reverse()));
+      name += typeExtMap.get(blob.type);
+    };
+    console.log("mappedName", name);
     try {
       this._uppyInstance.addFile({
         source: `${this.id} file input`,

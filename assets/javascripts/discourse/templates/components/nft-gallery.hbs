@@ -1,6 +1,25 @@
-<p>NFT gallery {{address}}</p>
+<p><strong>address</strong> {{address}}</p>
+
+<Input list="collections" @value={{this.query}} {{on "change" saySomething}} placeholder="Collection" />
+<datalist id="collections">
+  {{#each collections as |collection|}}
+    <option value="{{collection.slug}}" />
+  {{/each}}
+</datalist>
+
 <div class="nft-gallery">
-{{#each assets as |asset|}}
-  <img class="cover" src="{{asset.image_url}}" onclick={{action "selectAsset"}} width="180" height="180" alt="#">
-{{/each}}
+  {{#if assets.length}}
+    {{#each assets as |asset|}}
+      <img class="cover nft" loading="lazy" src="{{asset.image_url}}" onclick={{action "selectAsset"}} width="90" height="90" alt="#">
+    {{/each}}
+  {{else}}
+    {{#unless loading}}
+      <div class="alert alert-info">You don't own any NFTs {{replace-emoji ":frowning_face:" (hash lazy=true)}}</div>
+    {{/unless}}
+  {{/if}}
+  {{#if loading}}
+    <div class="placeholder-avatar placeholder-animation"></div>
+    <div class="placeholder-avatar placeholder-animation"></div>
+    <div class="placeholder-avatar placeholder-animation"></div>
+  {{/if}}
 </div>
