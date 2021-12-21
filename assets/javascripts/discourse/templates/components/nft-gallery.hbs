@@ -1,6 +1,6 @@
 <p><strong>address</strong> {{address}}</p>
 
-<Input list="collections" @value={{this.query}} {{on "change" saySomething}} placeholder="Collection" />
+<Input list="collections" @value={{this.query}} {{on "change" refetchAssets}} placeholder="Collection" />
 <datalist id="collections">
   {{#each collections as |collection|}}
     <option value="{{collection.slug}}" />

@@ -88,8 +88,7 @@ export default class extends Component {
   }
 
   @action
-  async saySomething() {
-    console.log("something");
+  async refetchAssets() {
     this.offset = 0;
     this.assets = [];
     this.fetchAssets();
