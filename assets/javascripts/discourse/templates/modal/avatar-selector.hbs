@@ -67,7 +67,7 @@
                               done=(action "uploadComplete")}}
       </div>
       {{#if connectError}}
-        <div class="alert alert-error">{{connectError}} {{replace-emoji ":frowning_face:" (hash lazy=true)}}</div>
+        <div class="alert alert-error">{{connectError}}</div>
       {{/if}}
       {{#if address}}
         <NftGallery @address={{address}} @select={{action "selectNFT"}} />

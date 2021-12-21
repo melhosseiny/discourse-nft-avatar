@@ -16,7 +16,7 @@ export default {
               if (!window.ethereum) {
                 throw {
                   name: "metamask_error",
-                  message: "Can't find MetaMask. Install MetaMask or use Brave Browser."
+                  message: "Can't find MetaMask. Install MetaMask or use Brave Wallet."
                 }
               }
               const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
