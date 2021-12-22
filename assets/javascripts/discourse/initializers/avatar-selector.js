@@ -3,6 +3,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { h } from "virtual-dom";
 import { avatarFor } from "discourse/widgets/post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import I18n from "I18n";
 
 export default {
   name: "init",
@@ -65,7 +66,7 @@ export default {
               if (!window.ethereum) {
                 throw {
                   name: "metamask_error",
-                  message: "Can't find MetaMask. Install MetaMask or use Brave Wallet."
+                  message: I18n.t("nft_avatar.no_wallet")
                 }
               }
               const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
