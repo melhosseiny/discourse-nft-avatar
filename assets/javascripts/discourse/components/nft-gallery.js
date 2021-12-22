@@ -96,7 +96,11 @@ export default class extends Component {
 
   @action
   async selectAsset(event) {
-    console.log(event.target.src);
-    this.select(event.target.src);
+    console.log(event.target.src, event.target.dataset.tokenId, event.target.dataset.contractAddress);
+    this.select({
+      src: event.target.src,
+      tokenId: event.target.dataset.tokenId,
+      contractAddress: event.target.dataset.contractAddress
+    });
   }
 }
