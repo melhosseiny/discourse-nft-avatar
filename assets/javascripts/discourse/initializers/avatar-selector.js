@@ -11,13 +11,11 @@ export default {
       api.includePostAttributes("user_nft_verified");
 
       api.customUserAvatarClasses(user => {
-        console.log("customUserAvatarClasses", user);
         return user.custom_fields.nft_verified ? ["nft"] : [];
       });
 
       api.reopenWidget("post-avatar", {
         html(attrs) {
-          console.log("post_attrs", attrs);
           let body;
           if (!attrs.user_id) {
             body = iconNode("far-trash-alt", { class: "deleted-user-avatar" });
@@ -85,7 +83,6 @@ export default {
             this.user.set("custom_fields.nft_verified", true);
             this.user.set("custom_fields.nft_token_id", tokenId);
             this.user.set("custom_fields.nft_contract_address", contractAddress);
-            console.log(this.user);
           },
           setUploader() {
             this.set("uploader", "file");

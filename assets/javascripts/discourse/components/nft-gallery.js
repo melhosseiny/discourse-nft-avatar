@@ -18,50 +18,40 @@ export default class extends Component {
 
   constructor() {
     super(...arguments);
-    console.log(document.querySelector('.avatar-selector.modal-body'));
-
-    let options = {
-      root: document.querySelector('.avatar-selector.modal-body'),
-      rootMargin: "15px",
-      threshold: 1.0
-    }
-
-    let callback = (entries, observer) => {
+    this.observer = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
-        console.log("intersecting", entry, entry.isIntersecting, entry.intersectionRatio);
         if (entry.isIntersecting) {
-          console.log(`unobserving ${entry.target.outerHTML}`);
           this.observer.unobserve(entry.target);
           this.fetchMoreAssets();
         }
       });
-    };
-    this.observer = new IntersectionObserver(callback, options);
+    }, {
+      root: document.querySelector('.avatar-selector.modal-body'),
+      rootMargin: "15px",
+      threshold: 1.0
+    });
   }
 
   async fetchAssets(offset) {
     this.loading = true;
-    // const address = this.get("address");
+    const address = this.get("address");
     // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
     // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
-    const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
+    // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
     const response = await fetch(`${OPENSEA_API}/assets?owner=${address}${offset ? `&offset=${offset}` : ''}${this.query ? `&collection=${this.query}` : ''}`);
     const assets = (await response.json()).assets.filter(asset => asset.image_url);
-    console.log(address, assets, assets.length);
     this.noMore = assets.length < LIMIT ? true : false;
     this.assets = [...this.assets, ...assets];
     this.loading = false;
   }
 
   async fetchCollections() {
-    console.log("fetching collections");
-    // const address = this.get("address");
+    const address = this.get("address");
     // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
     // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
-    const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
+    // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
     const response = await fetch(`${OPENSEA_API}/collections?asset_owner=${address}`);
     const collections = (await response.json()).filter(collection => collection.slug);
-    console.log(address, collections);
     this.collections = collections;
   }
 
@@ -71,10 +61,8 @@ export default class extends Component {
   }
 
   didRender() {
-    console.log("didRender", this.loading, this.assets.length, this.noMore);
     const lastImg = this.element.querySelector(".nft-gallery .nft:last-child");
     if (lastImg && !this.loading && !this.noMore) {
-      console.log(`observing ${lastImg.outerHTML}`);
       this.observer.observe(lastImg);
       this.lastImg = lastImg;
     }
@@ -82,7 +70,6 @@ export default class extends Component {
 
   @action
   async fetchMoreAssets() {
-    console.log("fetching more assets");
     this.offset += LIMIT;
     this.fetchAssets(this.offset);
   }
@@ -96,7 +83,6 @@ export default class extends Component {
 
   @action
   async selectAsset(event) {
-    console.log(event.target.src, event.target.dataset.tokenId, event.target.dataset.contractAddress);
     this.select({
       src: event.target.src,
       tokenId: event.target.dataset.tokenId,

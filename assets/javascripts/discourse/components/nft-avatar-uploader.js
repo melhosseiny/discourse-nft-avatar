@@ -54,9 +54,8 @@ export default Component.extend(UppyUploadMixin, {
     let name = url.pathname.split('/').pop();
     const response = await fetch(url.href)
     const blob = await response.blob();
-    console.log(blob);
     name = addExtIfMissing(name, blob.type);
-    console.log("mappedName", name);
+
     try {
       this._uppyInstance.addFile({
         source: `${this.id} file input`,
