@@ -12,6 +12,7 @@ export default class extends Component {
   offset = 0;
   @tracked collections;
   @tracked loading = false;
+  @tracked error;
   observer;
   lastImg;
   noMore = false;
@@ -33,26 +34,36 @@ export default class extends Component {
   }
 
   async fetchAssets(offset) {
+    this.error = undefined;
     this.loading = true;
-    const address = this.get("address");
-    // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
-    // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
-    // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
-    const response = await fetch(`${OPENSEA_API}/assets?owner=${address}${offset ? `&offset=${offset}` : ''}${this.query ? `&collection=${this.query}` : ''}`);
-    const assets = (await response.json()).assets.filter(asset => asset.image_url);
-    this.noMore = assets.length < LIMIT ? true : false;
-    this.assets = [...this.assets, ...assets];
-    this.loading = false;
+    try {
+      const address = this.address;
+      // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
+      // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
+      // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
+      const response = await fetch(`${OPENSEA_API}/assets?owner=${address}${offset ? `&offset=${offset}` : ''}${this.query ? `&collection=${this.query}` : ''}`);
+      const assets = (await response.json()).assets.filter(asset => asset.image_url);
+      this.noMore = assets.length < LIMIT ? true : false;
+      this.assets = [...this.assets, ...assets];
+    } catch (e) {
+      this.error = I18n.t("nft_avatar.trouble_at_sea");
+    } finally {
+      this.loading = false;
+    }
   }
 
   async fetchCollections() {
-    const address = this.get("address");
-    // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
-    // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
-    // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
-    const response = await fetch(`${OPENSEA_API}/collections?asset_owner=${address}`);
-    const collections = (await response.json()).filter(collection => collection.slug);
-    this.collections = collections;
+    try {
+      const address = this.address;
+      // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
+      // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
+      // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
+      const response = await fetch(`${OPENSEA_API}/collections?asset_owner=${address}`);
+      const collections = (await response.json()).filter(collection => collection.slug);
+      this.collections = collections;
+    } catch (e) {
+      this.error = I18n.t("nft_avatar.trouble_at_sea");
+    }
   }
 
   didReceiveAttrs() {
@@ -88,5 +99,9 @@ export default class extends Component {
       tokenId: event.target.dataset.tokenId,
       contractAddress: event.target.dataset.contractAddress
     });
+  }
+
+  willDestroy() {
+    this.observer.disconnect();
   }
 }

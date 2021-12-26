@@ -14,7 +14,11 @@
     {{/each}}
   {{else}}
     {{#unless loading}}
-      <div class="alert alert-info">{{i18n "nft_avatar.no_assets"}}  {{replace-emoji ":frowning_face:" (hash lazy=true)}}</div>
+      {{#if error}}
+        <div class="alert alert-error">{{error}}</div>
+      {{else}}
+        <div class="alert alert-info">{{i18n "nft_avatar.no_assets"}}  {{replace-emoji ":frowning_face:" (hash lazy=true)}}</div>
+      {{/if}}
     {{/unless}}
   {{/if}}
   {{#if loading}}
