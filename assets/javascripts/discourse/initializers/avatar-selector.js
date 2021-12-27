@@ -15,6 +15,10 @@ export default {
         return user.custom_fields.nft_verified ? ["nft"] : [];
       });
 
+      api.addTopicParticipantClassesCallback((attrs) => {
+        return attrs.user_nft_verified ? ["nft"] : [];
+      });
+
       api.reopenWidget("post-avatar", {
         html(attrs) {
           let body;

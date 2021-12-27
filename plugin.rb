@@ -34,4 +34,30 @@ after_initialize do
   add_to_serializer(:post, :user_nft_verified, false) {
     object.user.custom_fields['nft_verified'] if object.user
   }
+
+  add_to_serializer(:topic_poster, :user_nft_verified, false) {
+    object.user.custom_fields['nft_verified'] if object.user
+  }
+
+  add_to_serializer(:topic_post_count, :user_nft_verified, false) {
+    object[:user].custom_fields['nft_verified'] if object[:user]
+  }
+
+  require_dependency 'topic_post_count_serializer'
+  class ::TopicPostCountSerializer
+    attributes :custom_fields
+
+    def custom_fields
+      object[:user].custom_fields
+    end
+  end
+
+  require_dependency 'poster_serializer'
+  class ::PosterSerializer
+    attributes :custom_fields
+
+    def custom_fields
+      object.custom_fields
+    end
+  end
 end
