@@ -1,3 +1,7 @@
-.nft-gallery > * {
-  grid-column: auto / span 3;
+.nft-gallery {
+  grid-template-columns: repeat(3, 90px);
+
+  & .alert {
+    grid-column: auto / span 3;
+  }
 }
