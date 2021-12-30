@@ -42,8 +42,11 @@ export default class extends Component {
       // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
       // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
       const response = await fetch(`${OPENSEA_API}/assets?owner=${address}${offset ? `&offset=${offset}` : ''}${this.query ? `&collection=${this.query}` : ''}`);
-      const assets = (await response.json()).assets.filter(asset => asset.image_url);
-      this.noMore = assets.length < LIMIT ? true : false;
+      const rawAssets = (await response.json()).assets;
+      const assets = rawAssets.filter(asset =>
+        asset.image_url && asset.asset_contract.schema_name === "ERC721"
+      );
+      this.noMore = rawAssets.length < LIMIT ? true : false;
       this.assets = [...this.assets, ...assets];
     } catch (e) {
       this.error = I18n.t("nft_avatar.trouble_at_sea");
