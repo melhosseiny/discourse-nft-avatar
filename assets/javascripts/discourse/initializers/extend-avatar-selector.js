@@ -1,8 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { h } from "virtual-dom";
-import { avatarFor } from "discourse/widgets/post";
-import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import I18n from "I18n";
 
 export default {
