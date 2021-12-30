@@ -4,3 +4,4 @@ en:
       no_assets: "You don't own any NFTs"
       no_wallet: "Can't find MetaMask. Install MetaMask or use Brave Wallet."
       trouble_at_sea: "Can't fetch assets from OpenSea."
+      verify_notice: "Your NFT avatar is not verified. Did you transfer or sell it? Upload another NFT in"
