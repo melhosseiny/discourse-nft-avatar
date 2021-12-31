@@ -10,7 +10,7 @@
 
 enabled_site_setting :nft_avatar_enabled
 
-register_asset 'javascripts/lib/web3.min.js'
+register_asset 'lib/web3.min.js'
 
 register_asset 'stylesheets/common.scss'
 register_asset 'stylesheets/desktop.scss', :desktop
