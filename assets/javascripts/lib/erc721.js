@@ -4,7 +4,7 @@
 const web3 = new Web3(Web3.givenProvider);
 
 // Find the owner of an NFT
-export const owner_of = async (token_id, nft_address) => {
+export const owner_of = async (token_id, contract_address) => {
   const nft_abi = [
     {
       inputs: [
@@ -25,17 +25,17 @@ export const owner_of = async (token_id, nft_address) => {
     },
   ];
 
-  const nft_contract = new web3.eth.Contract(nft_abi, nft_address);
+  const nft_contract = new web3.eth.Contract(nft_abi, contract_address);
   const call_data = nft_contract.methods["ownerOf"](token_id).encodeABI();
   const owner = await web3.eth.call({
-    to: nft_address,
+    to: contract_address,
     data: call_data,
   });
   return owner;
 };
 
 // Count all NFTs assigned to an owner
-export const balance_of = async (owner, nft_address) => {
+export const balance_of = async (owner, contract_address) => {
   const nft_abi = [
     {
       inputs: [
@@ -56,10 +56,10 @@ export const balance_of = async (owner, nft_address) => {
     },
   ];
 
-  const nft_contract = new web3.eth.Contract(nft_abi, nft_address);
+  const nft_contract = new web3.eth.Contract(nft_abi, contract_address);
   const call_data = nft_contract.methods["balanceOf"](owner).encodeABI();
   const balance = await web3.eth.call({
-    to: nft_address,
+    to: contract_address,
     data: call_data,
   });
   return balance;

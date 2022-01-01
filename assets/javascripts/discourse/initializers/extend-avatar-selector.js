@@ -36,6 +36,7 @@ export default {
             this.set("uploader", "nft");
             this.set("nft", src);
             this.user.set("custom_fields.nft_verified", true);
+            this.user.set("custom_fields.nft_wallet_address", this.address);
             this.user.set("custom_fields.nft_token_id", tokenId);
             this.user.set(
               "custom_fields.nft_contract_address",

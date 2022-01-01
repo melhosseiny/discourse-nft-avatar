@@ -17,19 +17,22 @@ register_asset 'stylesheets/desktop.scss', :desktop
 register_asset 'stylesheets/mobile.scss', :mobile
 
 DiscoursePluginRegistry.serialized_current_user_fields << "nft_verified"
+DiscoursePluginRegistry.serialized_current_user_fields << "nft_wallet_address"
 DiscoursePluginRegistry.serialized_current_user_fields << "nft_token_id"
 DiscoursePluginRegistry.serialized_current_user_fields << "nft_contract_address"
 
 after_initialize do
   User.register_custom_field_type('nft_verified', :boolean)
+  User.register_custom_field_type('nft_wallet_address', :text)
   User.register_custom_field_type('nft_token_id', :text)
   User.register_custom_field_type('nft_contract_address', :text)
 
-  register_editable_user_custom_field [:nft_verified, :nft_token_id, :nft_contract_address]
+  register_editable_user_custom_field [:nft_verified, :nft_wallet_address, :nft_token_id, :nft_contract_address]
 
   allow_public_user_custom_field :nft_verified
 
   add_to_serializer(:user, :nft_verified, false) { object.custom_fields['nft_verified'] }
+  add_to_serializer(:user, :nft_wallet_address, false) { object.custom_fields['nft_wallet_address'] }
   add_to_serializer(:user, :nft_token_id, false) { object.custom_fields['nft_token_id'] }
   add_to_serializer(:user, :nft_contract_address, false) { object.custom_fields['nft_contract_address'] }
 
