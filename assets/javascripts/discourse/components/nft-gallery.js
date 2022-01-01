@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import I18n from "I18n";
 
 // needed until we add @glimmer/tracking
 const tracked = Ember._tracked;
@@ -15,7 +16,7 @@ const strQueryParams = (queryParams) =>
   Object.entries(queryParams)
   .map(p => queryParamTmpl(...p))
   .filter(p => p)
-  .join('&')
+  .join('&');
 
 export default class extends Component {
   @tracked assets = [];
@@ -32,7 +33,7 @@ export default class extends Component {
     this.observer = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          this.observer.unobserve(entry.target);
+          observer.unobserve(entry.target);
           this.fetchMoreAssets();
         }
       });
@@ -47,15 +48,15 @@ export default class extends Component {
     this.error = undefined;
     this.loading = true;
     try {
-      const address = this.address;
+      // const address = this.address;
       // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
-      // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
+      const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
       // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
       const queryParams = {
         owner: address,
         offset,
         collection: this.query
-      }
+      };
       const response = await fetch(`${OPENSEA_API}/assets?${strQueryParams(queryParams)}`);
       const rawAssets = (await response.json()).assets;
       const assets = rawAssets.filter(asset =>
@@ -72,9 +73,9 @@ export default class extends Component {
 
   async fetchCollections() {
     try {
-      const address = this.address;
+      // const address = this.address;
       // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
-      // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
+      const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
       // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
       const response = await fetch(`${OPENSEA_API}/collections?asset_owner=${address}`);
       const collections = (await response.json()).filter(collection => collection.slug);

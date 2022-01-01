@@ -1,5 +1,6 @@
 // https://eips.ethereum.org/EIPS/eip-721
 
+// eslint-disable-next-line
 const web3 = new Web3(Web3.givenProvider);
 
 // Find the owner of an NFT
@@ -31,7 +32,7 @@ export const owner_of = async (token_id, nft_address) => {
     data: call_data,
   });
   return owner;
-}
+};
 
 // Count all NFTs assigned to an owner
 export const balance_of = async (owner, nft_address) => {
@@ -62,4 +63,4 @@ export const balance_of = async (owner, nft_address) => {
     data: call_data,
   });
   return balance;
-}
+};

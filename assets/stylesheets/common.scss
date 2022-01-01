@@ -15,7 +15,7 @@
     grid-column: auto / span 4;
   }
 
-  & img {
+  & input[type="image"] {
     &:hover {
       background-color: $tertiary-low;
       clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
@@ -33,7 +33,7 @@
   }
 }
 
-img.cover {
+input[type="image"].cover {
   object-fit: cover;
   width: 100%;
   display: block;
@@ -48,7 +48,8 @@ img.cover {
   margin-left: 8px;
 }
 
-img.avatar.nft, .nft img.avatar {
+img.avatar.nft, .nft img.avatar,
+input[type="image"].avatar.nft, .nft input[type="image"].avatar {
   border-radius: 0;
   background-color: $tertiary-low;;
   clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);

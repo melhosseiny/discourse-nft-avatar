@@ -3,14 +3,14 @@
 <Input list="collections" @value={{this.query}} {{on "change" refetchAssets}} placeholder="Collection" />
 <datalist id="collections">
   {{#each collections as |collection|}}
-    <option value="{{collection.slug}}" />
+    <option value={{collection.slug}} />
   {{/each}}
 </datalist>
 
 <div class="nft-gallery">
   {{#if assets.length}}
     {{#each assets as |asset|}}
-      <img data-token-id={{asset.token_id}} data-contract-address={{asset.asset_contract.address}} class="cover nft" loading="lazy" src="{{asset.image_url}}" onclick={{action "selectAsset"}} width="90" height="90" alt="#">
+      <input type="image" data-token-id={{asset.token_id}} data-contract-address={{asset.asset_contract.address}} class="cover nft" loading="lazy" src={{asset.image_url}} onclick={{action "selectAsset"}} width="90" height="90" alt="#">
     {{/each}}
   {{else}}
     {{#unless loading}}

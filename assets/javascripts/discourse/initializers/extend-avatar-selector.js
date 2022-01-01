@@ -19,7 +19,7 @@ export default {
                 throw {
                   name: "metamask_error",
                   message: I18n.t("nft_avatar.no_wallet")
-                }
+                };
               }
               const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
               this.set("address", accounts[0].toLowerCase());
@@ -57,4 +57,4 @@ export default {
       });
     });
   }
-}
+};

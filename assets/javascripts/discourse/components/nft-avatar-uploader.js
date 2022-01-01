@@ -1,7 +1,6 @@
 import Component from "@ember/component";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
-import { observer } from "@ember/object";
 import { warn } from "@ember/debug";
 
 const AUTH_EXTS = {
@@ -12,7 +11,7 @@ const AUTH_EXTS = {
   ".heic": "image/heic",
   ".heif": "image/heif",
   ".webp": "image/webp"
-}
+};
 
 const addExtIfMissing = (name, blobType) => {
   if (!Object.keys(AUTH_EXTS).some(ext => name.endsWith(ext))) {
@@ -20,7 +19,7 @@ const addExtIfMissing = (name, blobType) => {
     name += typeExtMap.get(blobType);
   };
   return name;
-}
+};
 
 export default Component.extend(UppyUploadMixin, {
   type: "avatar",
@@ -52,14 +51,14 @@ export default Component.extend(UppyUploadMixin, {
   async uploadNFT(src) {
     const url = new URL(src);
     let name = url.pathname.split('/').pop();
-    const response = await fetch(url.href)
+    const response = await fetch(url.href);
     const blob = await response.blob();
     name = addExtIfMissing(name, blob.type);
 
     try {
       this._uppyInstance.addFile({
         source: `${this.id} file input`,
-        name: name,
+        name,
         type: blob.type,
         data: blob,
       });
