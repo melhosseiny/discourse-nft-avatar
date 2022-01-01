@@ -1,0 +1,10 @@
+{
+  "name": "discourse-nft-avatar",
+  "version": "0.0.1",
+  "repository": "https://github.com/melhosseiny/discourse-nft-avatar",
+  "author": "Mostafa Elshamy",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint-config-discourse": "^1.1.8"
+  }
+}
