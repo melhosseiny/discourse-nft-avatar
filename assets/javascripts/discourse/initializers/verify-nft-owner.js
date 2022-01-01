@@ -9,6 +9,7 @@ export default {
     withPluginApi("1.0.0", async api => {
       const currentUser = api.getCurrentUser();
       if (currentUser === null) return false;
+
       const {
         nft_contract_address,
         nft_token_id,
@@ -16,7 +17,7 @@ export default {
       } = currentUser.custom_fields;
       console.log("nft_custom_fields", currentUser.custom_fields);
 
-      if (nft_verified === false) {
+      if (nft_verified === true) {
         const owner = await owner_of(nft_token_id, nft_contract_address);
         const ownerAddress = web3.eth.abi.decodeParameter("address", owner);
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -25,7 +26,8 @@ export default {
         console.log(address, address.length, ownerAddress, ownerAddress.length);
         console.log(address.toLowerCase() === ownerAddress.toLowerCase());
         if (address.toLowerCase() !== ownerAddress.toLowerCase()) {
-          currentUser.set("custom_fields.nft_verified", true);
+          currentUser.set("custom_fields.nft_verified", false);
+          currentUser.set("user_option", {});
           currentUser.save([ "custom_fields" ]);
         }
       }
