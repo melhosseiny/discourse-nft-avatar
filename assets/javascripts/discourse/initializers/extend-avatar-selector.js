@@ -5,7 +5,7 @@ import I18n from "I18n";
 export default {
   name: "extend-avatar-selector",
   initialize() {
-    withPluginApi("1.0.0", api => {
+    withPluginApi("1.0.0", (api) => {
       api.modifyClass("controller:avatar-selector", {
         pluginId: "discourse-nft-avatar",
         uploader: "",
@@ -18,10 +18,12 @@ export default {
               if (!window.ethereum) {
                 throw {
                   name: "metamask_error",
-                  message: I18n.t("nft_avatar.no_wallet")
+                  message: I18n.t("nft_avatar.no_wallet"),
                 };
               }
-              const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+              const accounts = await window.ethereum.request({
+                method: "eth_requestAccounts",
+              });
               this.set("address", accounts[0].toLowerCase());
             } catch (e) {
               this.set("connectError", e.message);
@@ -35,7 +37,10 @@ export default {
             this.set("nft", src);
             this.user.set("custom_fields.nft_verified", true);
             this.user.set("custom_fields.nft_token_id", tokenId);
-            this.user.set("custom_fields.nft_contract_address", contractAddress);
+            this.user.set(
+              "custom_fields.nft_contract_address",
+              contractAddress
+            );
           },
           setUploader() {
             this.set("uploader", "file");
@@ -44,17 +49,15 @@ export default {
             const selectedUploadId = this.selectedUploadId;
             const type = this.selected;
 
-            this.user.save([
-              "custom_fields"
-            ]);
+            this.user.save(["custom_fields"]);
 
             this.user
               .pickAvatar(selectedUploadId, type)
               .then(() => window.location.reload())
               .catch(popupAjaxError);
           },
-        }
+        },
       });
     });
-  }
+  },
 };

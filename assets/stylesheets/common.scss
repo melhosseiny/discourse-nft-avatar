@@ -5,7 +5,7 @@
   grid-auto-flow: dense;
   grid-template-columns: repeat(4, 90px);
 
-  &> * {
+  & > * {
     box-sizing: border-box;
     min-width: 0;
     grid-column: auto / span 1;
@@ -48,10 +48,12 @@ input[type="image"].cover {
   margin-left: 8px;
 }
 
-img.avatar.nft, .nft img.avatar,
-input[type="image"].avatar.nft, .nft input[type="image"].avatar {
+img.avatar.nft,
+.nft img.avatar,
+input[type="image"].avatar.nft,
+.nft input[type="image"].avatar {
   border-radius: 0;
-  background-color: $tertiary-low;;
+  background-color: $tertiary-low;
   clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
 }
 
@@ -62,12 +64,12 @@ input[type="image"].avatar.nft, .nft input[type="image"].avatar {
 @keyframes fa-spin {
   0% {
     -webkit-transform: rotate(0deg);
-    transform: rotate(0deg)
+    transform: rotate(0deg);
   }
 
   to {
     -webkit-transform: rotate(1turn);
-    transform: rotate(1turn)
+    transform: rotate(1turn);
   }
 }
 

@@ -8,15 +8,13 @@ const tracked = Ember._tracked;
 const OPENSEA_API = "https://api.opensea.io/api/v1";
 const LIMIT = 20;
 
-const queryParamTmpl = (key, value) => value
-  ? `${key}=${value}`
-  : '';
+const queryParamTmpl = (key, value) => (value ? `${key}=${value}` : "");
 
 const strQueryParams = (queryParams) =>
   Object.entries(queryParams)
-  .map(p => queryParamTmpl(...p))
-  .filter(p => p)
-  .join('&');
+    .map((p) => queryParamTmpl(...p))
+    .filter((p) => p)
+    .join("&");
 
 export default class extends Component {
   @tracked assets = [];
@@ -30,18 +28,21 @@ export default class extends Component {
 
   constructor() {
     super(...arguments);
-    this.observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          observer.unobserve(entry.target);
-          this.fetchMoreAssets();
-        }
-      });
-    }, {
-      root: document.querySelector('.avatar-selector.modal-body'),
-      rootMargin: "15px",
-      threshold: 1.0
-    });
+    this.observer = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            observer.unobserve(entry.target);
+            this.fetchMoreAssets();
+          }
+        });
+      },
+      {
+        root: document.querySelector(".avatar-selector.modal-body"),
+        rootMargin: "15px",
+        threshold: 1.0,
+      }
+    );
   }
 
   async fetchAssets(offset) {
@@ -55,12 +56,15 @@ export default class extends Component {
       const queryParams = {
         owner: address,
         offset,
-        collection: this.query
+        collection: this.query,
       };
-      const response = await fetch(`${OPENSEA_API}/assets?${strQueryParams(queryParams)}`);
+      const response = await fetch(
+        `${OPENSEA_API}/assets?${strQueryParams(queryParams)}`
+      );
       const rawAssets = (await response.json()).assets;
-      const assets = rawAssets.filter(asset =>
-        asset.image_url && asset.asset_contract.schema_name === "ERC721"
+      const assets = rawAssets.filter(
+        (asset) =>
+          asset.image_url && asset.asset_contract.schema_name === "ERC721"
       );
       this.noMore = rawAssets.length < LIMIT ? true : false;
       this.assets = [...this.assets, ...assets];
@@ -77,8 +81,12 @@ export default class extends Component {
       // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
       const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
       // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
-      const response = await fetch(`${OPENSEA_API}/collections?asset_owner=${address}`);
-      const collections = (await response.json()).filter(collection => collection.slug);
+      const response = await fetch(
+        `${OPENSEA_API}/collections?asset_owner=${address}`
+      );
+      const collections = (await response.json()).filter(
+        (collection) => collection.slug
+      );
       this.collections = collections;
     } catch (e) {
       this.error = I18n.t("nft_avatar.trouble_at_sea");
@@ -116,7 +124,7 @@ export default class extends Component {
     this.select({
       src: event.target.src,
       tokenId: event.target.dataset.tokenId,
-      contractAddress: event.target.dataset.contractAddress
+      contractAddress: event.target.dataset.contractAddress,
     });
   }
 

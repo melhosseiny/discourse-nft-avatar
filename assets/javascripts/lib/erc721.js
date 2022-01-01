@@ -41,19 +41,19 @@ export const balance_of = async (owner, nft_address) => {
       inputs: [
         {
           name: "owner",
-          type: "address"
-        }
+          type: "address",
+        },
       ],
       name: "balanceOf",
       outputs: [
         {
           name: "",
-          type: "uint256"
-        }
+          type: "uint256",
+        },
       ],
       stateMutability: "view",
-      type: "function"
-    }
+      type: "function",
+    },
   ];
 
   const nft_contract = new web3.eth.Contract(nft_abi, nft_address);

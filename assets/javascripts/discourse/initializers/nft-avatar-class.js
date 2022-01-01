@@ -7,15 +7,15 @@ import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 export default {
   name: "nft-avatar-class",
   initialize() {
-    withPluginApi("1.0.0", api => {
+    withPluginApi("1.0.0", (api) => {
       api.includePostAttributes("user_nft_verified");
 
-      api.customUserAvatarClasses(
-        user => user.custom_fields.nft_verified ? ["nft"] : []
+      api.customUserAvatarClasses((user) =>
+        user.custom_fields.nft_verified ? ["nft"] : []
       );
 
-      api.addTopicParticipantClassesCallback(
-        attrs => attrs.user_nft_verified ? ["nft"] : []
+      api.addTopicParticipantClassesCallback((attrs) =>
+        attrs.user_nft_verified ? ["nft"] : []
       );
 
       api.reopenWidget("post-avatar", {
@@ -31,7 +31,7 @@ export default {
               url: attrs.usernameUrl,
               className: "main-avatar",
               hideTitle: true,
-              extraClasses: attrs.user_nft_verified ? "nft" : ""
+              extraClasses: attrs.user_nft_verified ? "nft" : "",
             });
           }
 
@@ -54,8 +54,8 @@ export default {
           }
 
           return result;
-        }
+        },
       });
     });
-  }
+  },
 };

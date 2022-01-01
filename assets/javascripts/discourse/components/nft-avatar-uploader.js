@@ -10,14 +10,16 @@ const AUTH_EXTS = {
   ".gif": "image/gif",
   ".heic": "image/heic",
   ".heif": "image/heif",
-  ".webp": "image/webp"
+  ".webp": "image/webp",
 };
 
 const addExtIfMissing = (name, blobType) => {
-  if (!Object.keys(AUTH_EXTS).some(ext => name.endsWith(ext))) {
-    const typeExtMap = new Map(Object.entries(AUTH_EXTS).map(entry => entry.reverse()));
+  if (!Object.keys(AUTH_EXTS).some((ext) => name.endsWith(ext))) {
+    const typeExtMap = new Map(
+      Object.entries(AUTH_EXTS).map((entry) => entry.reverse())
+    );
     name += typeExtMap.get(blobType);
-  };
+  }
   return name;
 };
 
@@ -34,7 +36,7 @@ export default Component.extend(UppyUploadMixin, {
     this.setProperties({
       imageIsNotASquare: upload.width !== upload.height,
       uploadedAvatarTemplate: upload.url,
-      uploadedAvatarId: upload.id
+      uploadedAvatarId: upload.id,
     });
 
     this.done();
@@ -50,7 +52,7 @@ export default Component.extend(UppyUploadMixin, {
 
   async uploadNFT(src) {
     const url = new URL(src);
-    let name = url.pathname.split('/').pop();
+    let name = url.pathname.split("/").pop();
     const response = await fetch(url.href);
     const blob = await response.blob();
     name = addExtIfMissing(name, blob.type);
