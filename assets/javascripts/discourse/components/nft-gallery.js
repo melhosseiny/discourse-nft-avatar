@@ -50,13 +50,8 @@ export default class extends Component {
     this.error = undefined;
     this.loading = true;
     try {
-      const address = this.address;
-      // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
-      // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
-      // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
-      // const address = "0x70448fa6dd61fb3f94b806d5def4e5e8dbef7ada";
       const queryParams = {
-        owner: address,
+        owner: this.address,
         offset,
         collection: this.query,
       };
@@ -79,14 +74,9 @@ export default class extends Component {
 
   async fetchCollections() {
     try {
-      const address = this.address;
-      // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
-      // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
-      // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
-      // const address = "0x70448fa6dd61fb3f94b806d5def4e5e8dbef7ada";
       const queryParams = {
-        asset_owner: address,
-        limit: COLLECTIONS_LIMIT
+        asset_owner: this.address,
+        limit: COLLECTIONS_LIMIT,
       };
       const response = await fetch(
         `${OPENSEA_API}/collections?${strQueryParams(queryParams)}`
