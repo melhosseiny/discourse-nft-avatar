@@ -2,7 +2,7 @@
 
 Validate your Discourse avatar as NFT
 
-Supports [MetaMask](https://metamask.io/) or [BraveWallet](https://brave.com/wallet/) and [ERC-721](https://ethereum.org/en/developers/docs/standards/tokens/erc-721/) NFT assets
+Supports [MetaMask](https://metamask.io/) or [Brave Wallet](https://brave.com/wallet/) and [ERC-721](https://ethereum.org/en/developers/docs/standards/tokens/erc-721/) NFT assets
 
 ## Installation
 
