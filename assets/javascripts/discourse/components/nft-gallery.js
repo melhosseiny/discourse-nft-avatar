@@ -6,7 +6,8 @@ import I18n from "I18n";
 const tracked = Ember._tracked;
 
 const OPENSEA_API = "https://api.opensea.io/api/v1";
-const LIMIT = 20;
+const ASSETS_LIMIT = 20;
+const COLLECTIONS_LIMIT = 300;
 
 const queryParamTmpl = (key, value) => (value ? `${key}=${value}` : "");
 
@@ -53,6 +54,7 @@ export default class extends Component {
       // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
       // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
       // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
+      // const address = "0x70448fa6dd61fb3f94b806d5def4e5e8dbef7ada";
       const queryParams = {
         owner: address,
         offset,
@@ -66,7 +68,7 @@ export default class extends Component {
         (asset) =>
           asset.image_url && asset.asset_contract.schema_name === "ERC721"
       );
-      this.noMore = rawAssets.length < LIMIT ? true : false;
+      this.noMore = rawAssets.length < ASSETS_LIMIT ? true : false;
       this.assets = [...this.assets, ...assets];
     } catch (e) {
       this.error = I18n.t("nft_avatar.trouble_at_sea");
@@ -81,8 +83,13 @@ export default class extends Component {
       // const address = "0xdccac502461c0d8261daf2ab3e411663e39b2654";
       // const address = "0x39cc9c86e67baf2129b80fe3414c397492ea8026";
       // const address = "0x2e3c41e8f8278532326673c598fdd240a620e518";
+      // const address = "0x70448fa6dd61fb3f94b806d5def4e5e8dbef7ada";
+      const queryParams = {
+        asset_owner: address,
+        limit: COLLECTIONS_LIMIT
+      };
       const response = await fetch(
-        `${OPENSEA_API}/collections?asset_owner=${address}`
+        `${OPENSEA_API}/collections?${strQueryParams(queryParams)}`
       );
       const collections = (await response.json()).filter(
         (collection) => collection.slug
@@ -108,7 +115,7 @@ export default class extends Component {
 
   @action
   async fetchMoreAssets() {
-    this.offset += LIMIT;
+    this.offset += ASSETS_LIMIT;
     this.fetchAssets(this.offset);
   }
 
