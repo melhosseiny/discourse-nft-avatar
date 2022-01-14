@@ -1,6 +1,6 @@
 <p><strong>address</strong> {{address}}</p>
 
-<Input list="collections" @value={{this.query}} {{on "change" refetchAssets}} placeholder="Collection" />
+<Input id="collection-input" list="collections" @value={{this.query}} {{on "change" refetchAssets}} placeholder="Collection" />
 <datalist id="collections">
   {{#each collections as |collection|}}
     <option value={{collection.slug}} />
@@ -10,7 +10,20 @@
 <div class="nft-gallery">
   {{#if assets.length}}
     {{#each assets as |asset|}}
-      <input type="image" data-token-id={{asset.token_id}} data-contract-address={{asset.asset_contract.address}} class="cover nft" loading="lazy" src={{asset.image_url}} onclick={{action "selectAsset"}} width="90" height="90" alt="#">
+      <input
+        type="image"
+        data-token-id={{asset.token_id}}
+        data-contract-address={{asset.asset_contract.address}}
+        class="cover nft"
+        loading="lazy"
+        src={{asset.image_url}}
+        onclick={{action "selectAsset"}}
+        width="90"
+        height="90"
+        alt="#"
+        disabled={{unless (eq asset.asset_contract.schema_name "ERC721") "disabled"}}
+        title={{unless (eq asset.asset_contract.schema_name "ERC721") (i18n "nft_avatar.erc_1155")}}
+      >
     {{/each}}
   {{else}}
     {{#unless loading}}

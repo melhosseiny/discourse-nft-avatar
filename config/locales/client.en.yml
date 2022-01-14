@@ -5,3 +5,4 @@ en:
       no_wallet: "Can't find MetaMask. Install MetaMask or use Brave Wallet."
       trouble_at_sea: "Can't fetch assets from OpenSea."
       verify_notice: "We can't verify your NFT avatar. Did you sell it? Upload another NFT in"
+      erc_1155: "ERC1155 NFTs are not supported."

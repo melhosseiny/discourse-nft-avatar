@@ -6,8 +6,8 @@ import I18n from "I18n";
 const tracked = Ember._tracked;
 
 const OPENSEA_API = "https://api.opensea.io/api/v1";
-const ASSETS_LIMIT = 20;
-const COLLECTIONS_LIMIT = 300;
+export const ASSETS_LIMIT = 20;
+export const COLLECTIONS_LIMIT = 300;
 
 const queryParamTmpl = (key, value) => (value ? `${key}=${value}` : "");
 
@@ -18,14 +18,14 @@ const strQueryParams = (queryParams) =>
     .join("&");
 
 export default class extends Component {
-  @tracked assets = [];
+  assets = []; // not @tracked to work in nft-avatar-test
   offset = 0;
-  @tracked collections;
+  collections;  // not @tracked to work in nft-avatar-test
   @tracked loading = false;
   @tracked error;
   observer;
   lastImg;
-  noMore = false;
+  @tracked noMore = false;
 
   constructor() {
     super(...arguments);
@@ -58,13 +58,9 @@ export default class extends Component {
       const response = await fetch(
         `${OPENSEA_API}/assets?${strQueryParams(queryParams)}`
       );
-      const rawAssets = (await response.json()).assets;
-      const assets = rawAssets.filter(
-        (asset) =>
-          asset.image_url && asset.asset_contract.schema_name === "ERC721"
-      );
-      this.noMore = rawAssets.length < ASSETS_LIMIT ? true : false;
-      this.assets = [...this.assets, ...assets];
+      const assets = (await response.json()).assets;
+      this.noMore = assets.length < ASSETS_LIMIT ? true : false;
+      this.set("assets", [...this.assets, ...assets]);
     } catch (e) {
       this.error = I18n.t("nft_avatar.trouble_at_sea");
     } finally {
@@ -75,16 +71,19 @@ export default class extends Component {
   async fetchCollections() {
     try {
       const queryParams = {
-        asset_owner: this.address,
+        owner: this.address,
         limit: COLLECTIONS_LIMIT,
       };
       const response = await fetch(
         `${OPENSEA_API}/collections?${strQueryParams(queryParams)}`
       );
-      const collections = (await response.json()).filter(
-        (collection) => collection.slug
-      );
-      this.collections = collections;
+      const json = await response.json();
+      const collections = json.collections
+        ? json.collections
+        : json.filter(
+            (collection) => collection.slug
+          );
+      this.set("collections", collections);
     } catch (e) {
       this.error = I18n.t("nft_avatar.trouble_at_sea");
     }
@@ -112,7 +111,7 @@ export default class extends Component {
   @action
   async refetchAssets() {
     this.offset = 0;
-    this.assets = [];
+    this.set("assets", []);
     this.fetchAssets();
   }
 
