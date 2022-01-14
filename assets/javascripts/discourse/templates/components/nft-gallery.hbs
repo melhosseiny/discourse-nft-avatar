@@ -20,7 +20,7 @@
         onclick={{action "selectAsset"}}
         width="90"
         height="90"
-        alt="#"
+        alt={{asset.name}}
         disabled={{if (not (eq asset.asset_contract.schema_name "ERC721")) "disabled"}}
         title={{if (not (eq asset.asset_contract.schema_name "ERC721")) (i18n "nft_avatar.erc_1155")}}
       >
