@@ -1,4 +1,4 @@
-import { acceptance, exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists, query, queryAll, updateCurrentUser } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { click, fillIn, visit } from "@ember/test-helpers";
 
@@ -10,6 +10,7 @@ import { ASSETS_LIMIT } from "discourse/plugins/discourse-nft-avatar/discourse/c
 
 const OWNER_OF_NONE = "0x3b8fff947d5dd0c0f0ef7aaa611ecf92e0885f96";
 const OWNER_OF_MANY = "0x63c9fb006e4474699cc6ccd09167ce5d2a875c9d";
+const FAKE_OWNER = "0x";
 
 const mockEthereumService = owner => {
   return { request: () => [owner] };
@@ -39,6 +40,12 @@ acceptance("NFT avatar uploader works", function (needs) {
     server.get("https://api.opensea.io/api/v1/collections", () => {
       return helper.response(collections);
     });
+
+    server.put("/u/eviltrout/preferences/avatar/pick", () => {
+      return helper.response({"success":"OK"});
+    });
+
+    server.get("https://lh3.googleusercontent.com/r5wv8pB_nlslCxoeZd25aCcPjs9Mm1vraf01I1w2KkBWkGylZN2FlGOHJvdxdeeIBj4r_BJhrUDzO421-N4gfTvRjWDrCHsLdy68cw", server.passthrough);
   });
 
   test("Clicking NFT button connects to wallet and fetches NFTs", async function (assert) {
@@ -82,5 +89,24 @@ acceptance("NFT avatar uploader works - Wallet support", function (needs) {
     await click("#nft-avatar-uploader");
 
     assert.equal(query(".alert.alert-error").textContent.trim(), "Can't find MetaMask. Install MetaMask or use Brave Wallet.", "it shows an error message");
+  });
+});
+
+acceptance("NFT avatar verification works", function (needs) {
+  needs.user();
+
+  test("Show message if NFT avatar can't be verified", async function (assert) {
+    updateCurrentUser({
+      custom_fields: {
+        nft_contract_address: "0x506bac140906af4f85ff9bef70c8e42de6e5d45c",
+        nft_token_id: "335",
+        nft_verified: false,
+        nft_wallet_address: FAKE_OWNER
+      }
+    });
+
+    await visit("/");
+    assert.ok(exists(".verify-nft-notice"));
+    assert.equal(query(".verify-nft-notice").textContent.trim(), "We can't verify your NFT avatar. Did you sell it? Upload another NFT in preferences.", "it shows NFT unverified notice");
   });
 });

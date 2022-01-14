@@ -23,6 +23,7 @@ export default {
       if (nft_verified === true) {
         const owner = await owner_of(nft_token_id, nft_contract_address);
         const ownerAddress = web3.eth.abi.decodeParameter("address", owner);
+
         if (nft_wallet_address.toLowerCase() !== ownerAddress.toLowerCase()) {
           currentUser.set("custom_fields.nft_verified", false);
           currentUser.set("user_option", {});
