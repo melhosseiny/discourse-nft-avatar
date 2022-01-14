@@ -20,7 +20,7 @@ const strQueryParams = (queryParams) =>
 export default class extends Component {
   assets = []; // not @tracked to work in nft-avatar-test
   offset = 0;
-  collections;  // not @tracked to work in nft-avatar-test
+  collections; // not @tracked to work in nft-avatar-test
   @tracked loading = false;
   @tracked error;
   observer;
@@ -80,9 +80,7 @@ export default class extends Component {
       const json = await response.json();
       const collections = json.collections
         ? json.collections
-        : json.filter(
-            (collection) => collection.slug
-          );
+        : json.filter((collection) => collection.slug);
       this.set("collections", collections);
     } catch (e) {
       this.error = I18n.t("nft_avatar.trouble_at_sea");
