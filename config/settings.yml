@@ -2,3 +2,6 @@ plugins:
   nft_avatar_enabled:
     default: true
     client: true
+  opensea_api_key:
+    default: ""
+    client: true

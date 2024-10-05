@@ -1,3 +1,4 @@
 en:
   site_settings:
     nft_avatar_enabled: "Add NFT avatar uploader to change profile picture modal"
+    opensea_api_key: "Your OpenSea API key"

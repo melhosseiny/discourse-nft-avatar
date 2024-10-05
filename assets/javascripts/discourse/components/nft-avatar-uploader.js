@@ -1,7 +1,10 @@
 import Component from "@ember/component";
+import { warn } from "@ember/debug";
+import { isBlank } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
-import { warn } from "@ember/debug";
+import I18n from "discourse-i18n";
 
 const AUTH_EXTS = {
   ".jpeg": "image/jpeg",
@@ -23,14 +26,19 @@ const addExtIfMissing = (name, blobType) => {
   return name;
 };
 
-export default Component.extend(UppyUploadMixin, {
-  type: "avatar",
-  tagName: "span",
-  imageIsNotASquare: false,
+@tagName("span")
+export default class AvatarUploader extends Component.extend(UppyUploadMixin) {
+  type = "avatar";
+  imageIsNotASquare = false;
+
+  @discourseComputed("uploading", "uploadedAvatarId")
+  customAvatarUploaded() {
+    return !this.uploading && !isBlank(this.uploadedAvatarId);
+  }
 
   validateUploadedFilesOptions() {
     return { imagesOnly: true };
-  },
+  }
 
   uploadDone(upload) {
     this.setProperties({
@@ -40,15 +48,16 @@ export default Component.extend(UppyUploadMixin, {
     });
 
     this.done();
-  },
+  }
 
   // only upload if selected NFT changes
   didReceiveAttrs() {
-    if (this.get("nft") !== this.get("prev_nft")) {
+    super.didReceiveAttrs();
+    if (this.get("nft") !== null && this.get("nft") !== this.get("prev_nft")) {
       this.uploadNFT(this.get("nft"));
     }
     this.set("prev_nft", this.get("nft"));
-  },
+  }
 
   async uploadNFT(src) {
     const url = new URL(src);
@@ -69,10 +78,17 @@ export default Component.extend(UppyUploadMixin, {
         id: "discourse.upload.uppy-add-files-error",
       });
     }
-  },
+  }
 
   @discourseComputed("user_id")
   data(user_id) {
     return { user_id };
-  },
-});
+  }
+
+  @discourseComputed("uploading", "uploadProgress")
+  uploadLabel() {
+    return this.uploading
+      ? `${I18n.t("uploading")} ${this.uploadProgress}%`
+      : I18n.t("upload");
+  }
+}

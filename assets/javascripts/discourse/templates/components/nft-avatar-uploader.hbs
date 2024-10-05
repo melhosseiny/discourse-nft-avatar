@@ -1,21 +1,32 @@
-<label class="btn btn-default btn-icon-text" disabled={{uploading}} title={{i18n "user.change_avatar.upload_title"}}>
-  {{#if connecting}}
+<label
+  class="btn btn-default btn-icon-text"
+  disabled={{this.uploading}}
+  title={{i18n "user.change_avatar.upload_title"}}
+>
+  {{#if this.connecting}}
     {{d-icon "fab-ethereum" class="fa-spin"}}
-  {{else if connectError}}
+  {{else if this.connectError}}
     {{d-icon "fab-ethereum" class="warning"}}
-  {{else if address}}
+  {{else if this.address}}
     {{d-icon "fab-ethereum" class="success"}}
   {{else}}
     {{d-icon "fab-ethereum"}}
   {{/if}}
-  {{#if (and (eq uploader "nft") uploading)}}
-    {{i18n "uploading"}} {{uploadProgress}}%
+  {{#if (and (eq this.uploader "nft") this.uploading)}}
+    {{i18n "uploading"}}
+    {{this.uploadProgress}}%
   {{else}}
     NFT
   {{/if}}
-  <input class="hidden-upload-field" disabled={{uploading}} type="button" accept="image/*">
+  <input
+    class="hidden-upload-field"
+    disabled={{this.uploading}}
+    type="button"
+    {{on "click" (fn @onClick "Hello, moon!")}}
+    accept="image/*"
+  />
 </label>
 
-{{#if imageIsNotASquare}}
+{{#if this.imageIsNotASquare}}
   <div class="warning">{{i18n "user.change_avatar.image_is_not_a_square"}}</div>
 {{/if}}

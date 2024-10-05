@@ -1,3 +1,4 @@
+import "discourse/plugins/discourse-nft-avatar/lib/web3.min";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { owner_of } from "discourse/plugins/discourse-nft-avatar/lib/erc721";
 

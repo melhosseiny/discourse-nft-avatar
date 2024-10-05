@@ -1,64 +1,82 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
+
+window.getEthereum = () => window.ethereum || window.braveEthereum;
 
 export default {
   name: "extend-avatar-selector",
   initialize() {
     withPluginApi("1.0.0", (api) => {
-      api.modifyClass("controller:avatar-selector", {
-        pluginId: "discourse-nft-avatar",
-        uploader: "",
-        connecting: false,
-        actions: {
-          async connectToWallet() {
-            this.set("uploader", "nft");
-            try {
-              this.set("connecting", true);
-              if (!window.ethereum) {
-                throw {
-                  name: "metamask_error",
-                  message: I18n.t("nft_avatar.no_wallet"),
-                };
+      api.modifyClass(
+        "component:modal/avatar-selector",
+        (Superclass) =>
+          class extends Superclass {
+            @tracked uploader = "";
+            @tracked connecting = false;
+            @tracked connectError = undefined;
+            @tracked address = undefined;
+            @tracked nft = undefined;
+
+            @action
+            async connectToWallet() {
+              this.uploader = "nft";
+
+              try {
+                this.connecting = true;
+                const ethereum = window.getEthereum();
+                if (!ethereum) {
+                  throw {
+                    name: "metamask_error",
+                    message: I18n.t("nft_avatar.no_wallet"),
+                  };
+                }
+                const accounts = await ethereum.request({
+                  method: "eth_requestAccounts",
+                });
+                this.address = accounts[0].toLowerCase();
+              } catch (e) {
+                this.connectError = e.message;
+              } finally {
+                this.connecting = false;
               }
-              const accounts = await window.ethereum.request({
-                method: "eth_requestAccounts",
-              });
-              this.set("address", accounts[0].toLowerCase());
-            } catch (e) {
-              this.set("connectError", e.message);
-            } finally {
-              this.set("connecting", false);
             }
-          },
-          selectNFT(nft) {
-            const { src, tokenId, contractAddress } = nft;
-            this.set("uploader", "nft");
-            this.set("nft", src);
-            this.user.set("custom_fields.nft_verified", true);
-            this.user.set("custom_fields.nft_wallet_address", this.address);
-            this.user.set("custom_fields.nft_token_id", tokenId);
-            this.user.set(
-              "custom_fields.nft_contract_address",
-              contractAddress
-            );
-          },
-          setUploader() {
-            this.set("uploader", "file");
-          },
-          saveAvatarSelection() {
-            const selectedUploadId = this.selectedUploadId;
-            const type = this.selected;
 
-            this.user.save(["custom_fields"]);
+            @action
+            selectNFT(nft) {
+              const { src, tokenId, contractAddress } = nft;
+              this.uploader = "nft";
+              this.nft = src;
+              this.user.set("custom_fields.nft_verified", true);
+              this.user.set("custom_fields.nft_wallet_address", this.address);
+              this.user.set("custom_fields.nft_token_id", tokenId);
+              this.user.set(
+                "custom_fields.nft_contract_address",
+                contractAddress
+              );
+            }
 
-            this.user
-              .pickAvatar(selectedUploadId, type)
-              .then(() => window.location.reload())
-              .catch(popupAjaxError);
-          },
-        },
-      });
+            @action
+            setUploader() {
+              this.uploader = "file";
+            }
+
+            @action
+            saveAvatarSelection() {
+              const selectedUploadId = this.selectedUploadId;
+              const type = this.selected;
+
+              this.user.save(["custom_fields"]);
+
+              this.user
+                .pickAvatar(selectedUploadId, type)
+                .then(() => window.location.reload())
+                .catch(popupAjaxError);
+            }
+          }
+      );
     });
   },
 };

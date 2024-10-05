@@ -1,8 +1,8 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { avatarFor } from "discourse/widgets/post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { avatarFor } from "discourse/widgets/post";
+import { iconNode } from "discourse-common/lib/icon-library";
 
 export default {
   name: "nft-avatar-class",

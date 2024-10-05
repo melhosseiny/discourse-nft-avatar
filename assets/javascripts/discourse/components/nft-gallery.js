@@ -1,13 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import I18n from "I18n";
 
-// needed until we add @glimmer/tracking
-const tracked = Ember._tracked;
-
-const OPENSEA_API = "https://api.opensea.io/api/v1";
+const OPENSEA_API = "https://api.opensea.io/api/v2";
 export const ASSETS_LIMIT = 20;
-export const COLLECTIONS_LIMIT = 300;
 
 const queryParamTmpl = (key, value) => (value ? `${key}=${value}` : "");
 
@@ -18,14 +15,14 @@ const strQueryParams = (queryParams) =>
     .join("&");
 
 export default class extends Component {
-  assets = []; // not @tracked to work in nft-avatar-test
-  offset = 0;
-  collections; // not @tracked to work in nft-avatar-test
   @tracked loading = false;
   @tracked error;
+  @tracked noMore = false;
+  assets = []; // not @tracked to work in nft-avatar-test
+  next = undefined;
+  collections = []; // not @tracked to work in nft-avatar-test
   observer;
   lastImg;
-  @tracked noMore = false;
 
   constructor() {
     super(...arguments);
@@ -46,21 +43,42 @@ export default class extends Component {
     );
   }
 
-  async fetchAssets(offset) {
+  async fetchAssets(next_cursor) {
     this.error = undefined;
     this.loading = true;
     try {
       const queryParams = {
-        owner: this.address,
-        offset,
+        limit: ASSETS_LIMIT,
         collection: this.query,
+        next: next_cursor,
       };
       const response = await fetch(
-        `${OPENSEA_API}/assets?${strQueryParams(queryParams)}`
+        `${OPENSEA_API}/chain/ethereum/account/${
+          this.address
+        }/nfts?${strQueryParams(queryParams)}`,
+        {
+          headers: {
+            "x-api-key": this.siteSettings.opensea_api_key,
+          },
+        }
       );
-      const assets = (await response.json()).assets;
-      this.noMore = assets.length < ASSETS_LIMIT ? true : false;
-      this.set("assets", [...this.assets, ...assets]);
+      const { nfts, next } = await response.json();
+      this.noMore = nfts.length < ASSETS_LIMIT ? true : false;
+      this.set("assets", [
+        ...this.assets,
+        ...nfts.map((nft) => {
+          nft.display_image_url = nft.display_image_url.replace(
+            "&auto=format",
+            ""
+          );
+          return nft;
+        }),
+      ]);
+      this.next = next;
+      const collections = [...new Set(nfts.map((nft) => nft.collection))];
+      this.set("collections", [
+        ...new Set([...this.collections, ...collections]),
+      ]);
     } catch (e) {
       this.error = I18n.t("nft_avatar.trouble_at_sea");
     } finally {
@@ -68,31 +86,13 @@ export default class extends Component {
     }
   }
 
-  async fetchCollections() {
-    try {
-      const queryParams = {
-        owner: this.address,
-        limit: COLLECTIONS_LIMIT,
-      };
-      const response = await fetch(
-        `${OPENSEA_API}/collections?${strQueryParams(queryParams)}`
-      );
-      const json = await response.json();
-      const collections = json.collections
-        ? json.collections
-        : json.filter((collection) => collection.slug);
-      this.set("collections", collections);
-    } catch (e) {
-      this.error = I18n.t("nft_avatar.trouble_at_sea");
-    }
-  }
-
   didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
     this.fetchAssets();
-    this.fetchCollections();
   }
 
   didRender() {
+    super.didRender(...arguments);
     const lastImg = this.element.querySelector(".nft-gallery .nft:last-child");
     if (lastImg && !this.loading && !this.noMore) {
       this.observer.observe(lastImg);
@@ -102,13 +102,12 @@ export default class extends Component {
 
   @action
   async fetchMoreAssets() {
-    this.offset += ASSETS_LIMIT;
-    this.fetchAssets(this.offset);
+    this.fetchAssets(this.next);
   }
 
   @action
   async refetchAssets() {
-    this.offset = 0;
+    this.next = undefined;
     this.set("assets", []);
     this.fetchAssets();
   }
@@ -123,6 +122,7 @@ export default class extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.observer.disconnect();
   }
 }

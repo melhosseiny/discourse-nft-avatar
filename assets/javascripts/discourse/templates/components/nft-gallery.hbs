@@ -1,9 +1,15 @@
 <p><strong>address</strong> {{address}}</p>
 
-<Input id="collection-input" list="collections" @value={{this.query}} {{on "change" refetchAssets}} placeholder="Collection" />
+<Input
+  id="collection-input"
+  list="collections"
+  @value={{this.query}}
+  {{on "change" refetchAssets}}
+  placeholder="Collection"
+/>
 <datalist id="collections">
   {{#each collections as |collection|}}
-    <option value={{collection.slug}} />
+    <option value={{collection}} />
   {{/each}}
 </datalist>
 
@@ -12,25 +18,29 @@
     {{#each assets as |asset|}}
       <input
         type="image"
-        data-token-id={{asset.token_id}}
-        data-contract-address={{asset.asset_contract.address}}
+        data-token-id={{asset.identifier}}
+        data-contract-address={{asset.contract}}
         class="cover nft"
         loading="lazy"
-        src={{asset.image_url}}
+        src={{asset.display_image_url}}
         onclick={{action "selectAsset"}}
         width="90"
         height="90"
         alt={{asset.name}}
-        disabled={{if (not (eq asset.asset_contract.schema_name "ERC721")) "disabled"}}
-        title={{if (not (eq asset.asset_contract.schema_name "ERC721")) (i18n "nft_avatar.erc_1155")}}
-      >
+        disabled={{if (not-eq asset.token_standard "erc721") "disabled"}}
+        title={{if
+          (not-eq asset.token_standard "erc721")
+          (i18n "nft_avatar.erc_1155")
+        }}
+      />
     {{/each}}
   {{else}}
     {{#unless loading}}
       {{#if error}}
         <div class="alert alert-error">{{error}}</div>
       {{else}}
-        <div class="alert alert-info">{{i18n "nft_avatar.no_assets"}}  {{replace-emoji ":frowning_face:" (hash lazy=true)}}</div>
+        <div class="alert alert-info">{{i18n "nft_avatar.no_assets"}}
+          {{replace-emoji ":frowning_face:" (hash lazy=true)}}</div>
       {{/if}}
     {{/unless}}
   {{/if}}
